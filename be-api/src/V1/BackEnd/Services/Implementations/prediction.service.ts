@@ -1,5 +1,6 @@
 import { Inject } from "@nestjs/common";
 import { Injectable } from "@nestjs/common/decorators/core/injectable.decorator";
+import { Status } from "../../Core/Enums/status";
 import { BusinessException } from "../../Core/Exceptions/business.exception";
 import { Prediction } from "../../Core/Model/prediction.abstract";
 import { ScorePrediction } from "../../Core/Model/score-prediction";
@@ -18,8 +19,12 @@ export class PredictionService implements IPredictionService {
     getPrediction(): Prediction {
         let scoreValidator = new ScorePredictionStringValidator();
 
+        let now = this.timeProvider.getNowUTC();
+
         let scorePrediction: Prediction =
-            new ScorePrediction(1, 2, "3:5", scoreValidator, this.timeProvider.getNowUTC(), this.timeProvider.getNowUTC());
+            new ScorePrediction(1, 2, "3:5", scoreValidator, now, now, true);
+
+        scorePrediction.updateStatus(Status.Lost, now);
 
         return scorePrediction;
     }

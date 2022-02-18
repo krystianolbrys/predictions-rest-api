@@ -12,16 +12,17 @@ export abstract class Prediction {
     readonly id: number;
     readonly eventId: number;
     readonly predictionString: string;
-    readonly createadAt: Date;
-    updatedAt: Date;
+    readonly creationTime: Date;
+    private modificationTime: Date;
 
     constructor(
         id: number,
         eventId: number,
         predictionString: string,
         stringValidator: IPredictionStringValidator,
-        createadAt: Date,
-        updatedAt: Date,
+        creationTime: Date,
+        modificationTime: Date,
+        isSoftDeleted: boolean,
         status: Status) {
 
         if (id < 0) {
@@ -44,8 +45,9 @@ export abstract class Prediction {
         this.status = status;
         this.eventId = eventId;
         this.predictionString = predictionString;
-        this.createadAt = createadAt;
-        this.updatedAt = updatedAt;
+        this.creationTime = creationTime;
+        this.modificationTime = modificationTime;
+        this.isSoftDeleted = isSoftDeleted;
     }
 
     updateStatus(status: Status, updateDate: Date) {
@@ -58,14 +60,11 @@ export abstract class Prediction {
         }
 
         this.status = status;
-        this.setUpdateTime(updateDate);
+        this.updateModificationTime(updateDate);
     }
 
-    setUpdateTime(updateDate: Date) {
-        if (updateDate < this.createadAt) {
-            throw new BusinessException(`UpdateDate can not be lower that CreateadDate`);
-        }
-        this.updatedAt = updateDate;
+    getUpdatedAt(): Date{
+        return this.modificationTime;
     }
 
     markAsDeleted() {
@@ -74,5 +73,13 @@ export abstract class Prediction {
 
     isDeleted(): boolean {
         return this.isSoftDeleted;
+    }
+
+    private updateModificationTime(furtherDate: Date) {
+        if (furtherDate < this.creationTime) {
+            throw new BusinessException(`ModificationDate can not be lower that CreationDate`);
+        }
+
+        this.modificationTime = furtherDate;
     }
 }

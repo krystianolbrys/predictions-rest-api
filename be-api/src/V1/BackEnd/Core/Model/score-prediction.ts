@@ -12,9 +12,10 @@ export class ScorePrediction extends Prediction{
         eventId: number,
         predictionString: string,
         stringValidator: IPredictionStringValidator,
-        createadAt: Date,
-        updatedAt: Date,
-        status: Status = Status.Unresolved){
-            super(id,eventId, predictionString, stringValidator, createadAt, updatedAt, status);
+        creationTime: Date,
+        modificationTime: Date,
+        isSoftDeleted: boolean,
+        status: Status = Status.Unresolved,){
+            super(id,eventId, predictionString, stringValidator, creationTime, modificationTime, isSoftDeleted, status);
         }
 }
