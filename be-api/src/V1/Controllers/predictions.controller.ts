@@ -1,4 +1,5 @@
 import { Controller, Get, Inject } from '@nestjs/common';
+import { Prediction } from '../BackEnd/Core/Model/prediction.abstract';
 import { PredictionService } from '../BackEnd/Services/Implementations/prediction.service';
 import { IPredictionService } from '../BackEnd/Services/Interfaces/prediction.service.interface';
 
@@ -12,8 +13,9 @@ export class PredictionsController {
 
     }
 
+    // for now contract from BE for testing purposes without units
     @Get()
-    getOk(): string {
-        return this.predictionService.getOkMessage();
+    getOk(): Prediction {
+        return this.predictionService.getPrediction();
     }
 }
