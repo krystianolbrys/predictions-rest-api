@@ -44,7 +44,6 @@ export abstract class Prediction {
         this.status = status;
         this.eventId = eventId;
         this.predictionString = predictionString;
-
         this.createadAt = createadAt;
         this.updatedAt = updatedAt;
     }
