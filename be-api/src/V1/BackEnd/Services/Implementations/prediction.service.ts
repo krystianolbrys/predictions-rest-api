@@ -1,39 +1,45 @@
-import { Inject } from "@nestjs/common";
-import { Injectable } from "@nestjs/common/decorators/core/injectable.decorator";
-import { Status } from "../../Core/Enums/status";
-import { BusinessException } from "../../Core/Exceptions/business.exception";
-import { Prediction } from "../../Core/Model/prediction.abstract";
-import { ScorePrediction } from "../../Core/Model/score-prediction";
-import { ScorePredictionStringValidator } from "../../Core/Validators/scorePredictionStringValidator";
-import { TimeProvider } from "../../Infrastructure/TimeProvider/time-provider";
-import { ITimeProvider } from "../../Infrastructure/TimeProvider/time-provider.interface";
-import { IPredictionService } from "../Interfaces/prediction.service.interface";
+import { Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
+import { Status } from '../../Core/Enums/status';
+import { BusinessException } from '../../Core/Exceptions/business.exception';
+import { Prediction } from '../../Core/Model/prediction.abstract';
+import { ScorePrediction } from '../../Core/Model/score-prediction';
+import { ScorePredictionStringValidator } from '../../Core/Validators/scorePredictionStringValidator';
+import { TimeProvider } from '../../Infrastructure/TimeProvider/time-provider';
+import { ITimeProvider } from '../../Infrastructure/TimeProvider/time-provider.interface';
+import { IPredictionService } from '../Interfaces/prediction.service.interface';
 
 @Injectable()
 export class PredictionService implements IPredictionService {
+  constructor(
+    @Inject(TimeProvider) private readonly timeProvider: ITimeProvider,
+  ) {}
 
-    constructor(@Inject(TimeProvider) private readonly timeProvider: ITimeProvider){
-        
-    }
+  getPrediction(): Prediction {
+    let scoreValidator = new ScorePredictionStringValidator();
 
-    getPrediction(): Prediction {
-        let scoreValidator = new ScorePredictionStringValidator();
+    let now = this.timeProvider.getNowUTC();
 
-        let now = this.timeProvider.getNowUTC();
+    let scorePrediction: Prediction = new ScorePrediction(
+      1,
+      2,
+      '3:5',
+      scoreValidator,
+      now,
+      now,
+      true,
+    );
 
-        let scorePrediction: Prediction =
-            new ScorePrediction(1, 2, "3:5", scoreValidator, now, now, true);
+    scorePrediction.updateStatus(Status.Lost, now);
 
-        scorePrediction.updateStatus(Status.Lost, now);
+    return scorePrediction;
+  }
 
-        return scorePrediction;
-    }
+  getBusinessError(): void {
+    throw new BusinessException('getBusinessErrorExmaple');
+  }
 
-    getBusinessError(): void {
-        throw new BusinessException("getBusinessErrorExmaple")
-    }
-
-    getOkMessage(): string {
-        return "OkFromService";
-    }
+  getOkMessage(): string {
+    return 'OkFromService';
+  }
 }

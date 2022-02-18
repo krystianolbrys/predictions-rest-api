@@ -1,5 +1,3 @@
-import { DateTime } from "luxon";
-
-export interface ITimeProvider{
-    getNowUTC(): Date;
+export interface ITimeProvider {
+  getNowUTC(): Date;
 }

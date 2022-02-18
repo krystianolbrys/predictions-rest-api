@@ -9,4 +9,4 @@ import { PredictionsController } from './V1/Controllers/predictions.controller';
   controllers: [AppController, PredictionsController],
   providers: [PredictionService, TimeProvider],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,10 +1,9 @@
-import { Prediction } from "../../Core/Model/prediction.abstract";
+import { Prediction } from '../../Core/Model/prediction.abstract';
 
 export interface IPredictionService {
+  getOkMessage(): string;
 
-    getOkMessage(): string;
+  getBusinessError(): void;
 
-    getBusinessError(): void;
-
-    getPrediction(): Prediction;
+  getPrediction(): Prediction;
 }

@@ -1,6 +1,6 @@
 export enum Status {
-    Win,
-    Lost,
-    Draw,
-    Unresolved
+  Win,
+  Lost,
+  Draw,
+  Unresolved,
 }
