@@ -16,11 +16,11 @@ export class PredictionService implements IPredictionService {
   ) {}
 
   getPrediction(): Prediction {
-    let scoreValidator = new ScorePredictionStringValidator();
+    const scoreValidator = new ScorePredictionStringValidator();
 
-    let now = this.timeProvider.getNowUTC();
+    const now = this.timeProvider.getNowUTC();
 
-    let scorePrediction: Prediction = new ScorePrediction(
+    const scorePrediction: Prediction = new ScorePrediction(
       1,
       2,
       '3:5',
