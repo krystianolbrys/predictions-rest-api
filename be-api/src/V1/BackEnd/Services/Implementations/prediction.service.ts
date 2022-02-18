@@ -2,7 +2,7 @@ import { Inject, Logger } from '@nestjs/common';
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
 import { Status } from '../../Core/Enums/status';
 import { BusinessException } from '../../Core/Exceptions/business.exception';
-import { ILogger } from '../../Core/Interfaces/logger.interface';
+import { ILogger } from '../../Core/Ports/logger.interface';
 import { Prediction } from '../../Core/Model/prediction.abstract';
 import { ScorePrediction } from '../../Core/Model/score-prediction';
 import { IPredictionStringValidator } from '../../Core/Validators/predictionStringValidator.interface';

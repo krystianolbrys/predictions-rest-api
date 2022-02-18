@@ -1,7 +1,7 @@
 import { PredictionType } from '../Enums/predictionType';
 import { Status } from '../Enums/status';
 import { BusinessException } from '../Exceptions/business.exception';
-import { ILogger } from '../Interfaces/logger.interface';
+import { ILogger } from '../Ports/logger.interface';
 import { IPredictionStringValidator } from '../Validators/predictionStringValidator.interface';
 
 export abstract class Prediction {

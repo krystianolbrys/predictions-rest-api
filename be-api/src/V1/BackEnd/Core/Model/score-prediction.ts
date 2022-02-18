@@ -1,6 +1,6 @@
 import { PredictionType } from '../Enums/predictionType';
 import { Status } from '../Enums/status';
-import { ILogger } from '../Interfaces/logger.interface';
+import { ILogger } from '../Ports/logger.interface';
 import { IPredictionStringValidator } from '../Validators/predictionStringValidator.interface';
 import { Prediction } from './prediction.abstract';
 

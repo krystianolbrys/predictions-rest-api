@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ILogger } from '../../Core/Interfaces/logger.interface';
+import { ILogger } from '../../Core/Ports/logger.interface';
 
 // dummy logger for Ports and Adapters like approach
 @Injectable()
