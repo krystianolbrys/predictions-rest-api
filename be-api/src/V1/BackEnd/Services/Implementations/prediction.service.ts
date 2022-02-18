@@ -1,22 +1,27 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
 import { Status } from '../../Core/Enums/status';
 import { BusinessException } from '../../Core/Exceptions/business.exception';
+import { ILogger } from '../../Core/Interfaces/logger.interface';
 import { Prediction } from '../../Core/Model/prediction.abstract';
 import { ScorePrediction } from '../../Core/Model/score-prediction';
+import { IPredictionStringValidator } from '../../Core/Validators/predictionStringValidator.interface';
 import { ScorePredictionStringValidator } from '../../Core/Validators/scorePredictionStringValidator';
 import { TimeProvider } from '../../Infrastructure/TimeProvider/time-provider';
 import { ITimeProvider } from '../../Infrastructure/TimeProvider/time-provider.interface';
 import { IPredictionService } from '../Interfaces/prediction.service.interface';
+import DummyConsoleLogger from './logger';
 
 @Injectable()
 export class PredictionService implements IPredictionService {
   constructor(
     @Inject(TimeProvider) private readonly timeProvider: ITimeProvider,
+    @Inject(DummyConsoleLogger) private readonly logger: ILogger,
   ) {}
 
   getPrediction(): Prediction {
-    const scoreValidator = new ScorePredictionStringValidator();
+    const scoreValidator: IPredictionStringValidator =
+      new ScorePredictionStringValidator();
 
     const now = this.timeProvider.getNowUTC();
 
@@ -27,10 +32,12 @@ export class PredictionService implements IPredictionService {
       scoreValidator,
       now,
       now,
-      true,
+      false,
+      this.logger,
     );
 
     scorePrediction.updateStatus(Status.Lost, now);
+    scorePrediction.updateStatus(Status.Win, now);
 
     return scorePrediction;
   }
