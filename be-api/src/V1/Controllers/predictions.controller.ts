@@ -1,7 +1,7 @@
-import { Controller, Get, Inject } from '@nestjs/common';
-import { Prediction } from '../BackEnd/Core/Model/prediction.abstract';
+import { Body, Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
 import { PredictionService } from '../BackEnd/Services/Implementations/prediction.service';
 import { IPredictionService } from '../BackEnd/Services/Interfaces/prediction.service.interface';
+import { PreditcionRequestModel } from '../Models/Requests/prediction-request.model';
 
 @Controller({
   version: '1',
@@ -13,9 +13,11 @@ export class PredictionsController {
     private readonly predictionService: IPredictionService,
   ) {}
 
-  // for now contract from BE for testing purposes without units
   @Get()
-  getOk(): Prediction {
-    return this.predictionService.getPrediction();
-  }
+  @HttpCode(200)
+  fetchAll(): void {}
+
+  @Post()
+  @HttpCode(204)
+  create(@Body() dto: PreditcionRequestModel): void {}
 }

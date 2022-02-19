@@ -1,7 +1,7 @@
 import { PredictionStatusResponseModel } from './prediction-status-response.model';
 import { PreditcionTypeResponseModel } from './prediction-type-response.model';
 
-export class PreditcionRequestModel {
+export class PreditcionResponseModel {
   readonly event_id: number;
   readonly market_type: PreditcionTypeResponseModel;
   readonly prediction: string;
