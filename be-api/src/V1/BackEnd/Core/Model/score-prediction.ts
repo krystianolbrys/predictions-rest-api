@@ -2,6 +2,7 @@ import { PredictionType } from '../Enums/predictionType';
 import { Status } from '../Enums/status';
 import { ILogger } from '../Ports/logger.interface';
 import { IPredictionStringValidator } from '../Validators/predictionStringValidator.interface';
+import { PredictionTime } from './prediction-time';
 import { Prediction } from './prediction.abstract';
 
 export class ScorePrediction extends Prediction {
@@ -12,8 +13,7 @@ export class ScorePrediction extends Prediction {
     eventId: number,
     predictionString: string,
     stringValidator: IPredictionStringValidator,
-    creationTime: Date,
-    modificationTime: Date,
+    time: PredictionTime,
     isSoftDeleted: boolean,
     logger: ILogger,
     status: Status = Status.Unresolved,
@@ -23,8 +23,7 @@ export class ScorePrediction extends Prediction {
       eventId,
       predictionString,
       stringValidator,
-      creationTime,
-      modificationTime,
+      time,
       isSoftDeleted,
       status,
       logger,

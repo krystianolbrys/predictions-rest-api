@@ -11,6 +11,7 @@ import { TimeProvider } from '../../Infrastructure/TimeProvider/time-provider';
 import { ITimeProvider } from '../../Infrastructure/TimeProvider/time-provider.interface';
 import { IPredictionService } from '../Interfaces/prediction.service.interface';
 import DummyConsoleLogger from './logger';
+import { PredictionTime } from '../../Core/Model/prediction-time';
 
 @Injectable()
 export class PredictionService implements IPredictionService {
@@ -25,19 +26,20 @@ export class PredictionService implements IPredictionService {
 
     const now = this.timeProvider.getNowUTC();
 
+    const predictionTime = new PredictionTime(now, now);
+
     const scorePrediction: Prediction = new ScorePrediction(
       1,
       2,
       '3:5',
       scoreValidator,
-      now,
-      now,
+      predictionTime,
       false,
       this.logger,
     );
 
     scorePrediction.updateStatus(Status.Lost, now);
-    scorePrediction.updateStatus(Status.Win, now);
+    //scorePrediction.updateStatus(Status.Win, now);
 
     return scorePrediction;
   }

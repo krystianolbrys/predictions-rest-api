@@ -3,6 +3,7 @@ import { Status } from '../Enums/status';
 import { BusinessException } from '../Exceptions/business.exception';
 import { ILogger } from '../Ports/logger.interface';
 import { IPredictionStringValidator } from '../Validators/predictionStringValidator.interface';
+import { PredictionTime } from './prediction-time';
 
 export abstract class Prediction {
   abstract readonly predictionType: PredictionType;
@@ -11,19 +12,17 @@ export abstract class Prediction {
 
   private status: Status;
   private isSoftDeleted: boolean;
-  private modificationTime: Date;
   readonly id: number;
   readonly eventId: number;
   readonly predictionString: string;
-  readonly creationTime: Date;
+  readonly time: PredictionTime;
 
   constructor(
     id: number,
     eventId: number,
     predictionString: string,
     stringValidator: IPredictionStringValidator,
-    creationTime: Date,
-    modificationTime: Date,
+    time: PredictionTime,
     isSoftDeleted: boolean,
     status: Status,
     logger: ILogger,
@@ -44,6 +43,10 @@ export abstract class Prediction {
       throw new BusinessException('No stringValidator provided');
     }
 
+    if (time == null || undefined) {
+      throw new BusinessException('No predictionTime provided');
+    }
+
     if (!stringValidator.validate(predictionString)) {
       throw new BusinessException(
         'Prediction value validation fail - please correct',
@@ -54,9 +57,9 @@ export abstract class Prediction {
     this.status = status;
     this.eventId = eventId;
     this.predictionString = predictionString;
-    this.creationTime = creationTime;
-    this.modificationTime = modificationTime;
     this.isSoftDeleted = isSoftDeleted;
+    this.time = time;
+
     this.logger = logger;
   }
 
@@ -78,11 +81,7 @@ export abstract class Prediction {
     }
 
     this.status = status;
-    this.updateModificationTime(updateDate);
-  }
-
-  getUpdatedAt(): Date {
-    return this.modificationTime;
+    this.time.updateModificationTime(updateDate);
   }
 
   markAsDeleted() {
@@ -91,15 +90,5 @@ export abstract class Prediction {
 
   isDeleted(): boolean {
     return this.isSoftDeleted;
-  }
-
-  private updateModificationTime(furtherDate: Date) {
-    if (furtherDate < this.creationTime) {
-      throw new BusinessException(
-        `ModificationDate can not be lower that CreationDate`,
-      );
-    }
-
-    this.modificationTime = furtherDate;
   }
 }
