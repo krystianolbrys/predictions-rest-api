@@ -12,13 +12,58 @@ import { ITimeProvider } from '../../Infrastructure/TimeProvider/time-provider.i
 import { IPredictionService } from '../Interfaces/prediction.service.interface';
 import DummyConsoleLogger from './logger';
 import { PredictionTime } from '../../Core/Model/prediction-time';
+import { PredictionRequest } from '../../Contracts/Prediction/Request/prediction-request';
+import { PredictionType } from '../../Contracts/Prediction/Common/predictionType';
 
 @Injectable()
 export class PredictionService implements IPredictionService {
+  private readonly DefaultZeroIdentifierValue: number;
+
   constructor(
     @Inject(TimeProvider) private readonly timeProvider: ITimeProvider,
     @Inject(DummyConsoleLogger) private readonly logger: ILogger,
-  ) {}
+  ) {
+    this.DefaultZeroIdentifierValue = 0;
+  }
+
+  insert(prediction: PredictionRequest): void {
+    const now = this.timeProvider.getNowUTC();
+    const predictionTime = new PredictionTime(now, now);
+    const scoreValidator = this.getStringValidatorBasedOnType(
+      prediction.predictionType,
+    );
+    const notDeleted = false;
+
+    this.logger.log(prediction.eventId.toString());
+
+    const scorePrediction: Prediction = new ScorePrediction(
+      this.DefaultZeroIdentifierValue,
+      prediction.eventId,
+      prediction.predictionString,
+      scoreValidator,
+      predictionTime,
+      notDeleted,
+      this.logger,
+    );
+
+    // persist
+  }
+
+  private getStringValidatorBasedOnType(
+    type: PredictionType,
+  ): IPredictionStringValidator {
+    if (type === PredictionType.Score) {
+      return new ScorePredictionStringValidator();
+    }
+
+    // if(type === PredictionType.Result){
+    //   return new ResultPredictionStringValidator();
+    // }
+
+    throw new BusinessException(
+      `No PredictionStringValidator for given type ${PredictionType[type]}`,
+    );
+  }
 
   getPrediction(): Prediction {
     const scoreValidator: IPredictionStringValidator =
