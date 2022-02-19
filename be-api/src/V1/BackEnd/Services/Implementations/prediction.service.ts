@@ -14,27 +14,52 @@ import DummyConsoleLogger from './logger';
 import { PredictionTime } from '../../Core/Model/prediction-time';
 import { PredictionRequest } from '../../Contracts/Prediction/Request/prediction-request';
 import { PredictionType } from '../../Contracts/Prediction/Common/predictionType';
+import { DummyPredictionsContext } from '../../Persistence/DbContext/dummy-predictions.context';
+import { IDbContext } from '../../Persistence/DbContext/dbContext.interface';
+import { PredictionDto } from '../../Persistence/DataTranferObjects/prediction-dto';
+import { PredictionResponse } from '../../Contracts/Prediction/Response/prediction-response';
 
 @Injectable()
 export class PredictionService implements IPredictionService {
   private readonly DefaultZeroIdentifierValue: number;
 
   constructor(
+    @Inject(DummyPredictionsContext)
+    private readonly dbContext: IDbContext<PredictionDto>,
     @Inject(TimeProvider) private readonly timeProvider: ITimeProvider,
     @Inject(DummyConsoleLogger) private readonly logger: ILogger,
   ) {
     this.DefaultZeroIdentifierValue = 0;
   }
 
+  delete(id: number): void {
+    this.dbContext.delete(id);
+  }
+
+  fetchAll(): PredictionResponse[] {
+    const all = this.dbContext.fetchAll();
+
+    const result = all.map(
+      (dto) =>
+        new PredictionResponse(
+          dto.id,
+          dto.eventId,
+          dto.predictionValue,
+          PredictionType[dto.predictionType],
+          Status[dto.status],
+        ),
+    );
+
+    return result;
+  }
+
   insert(prediction: PredictionRequest): void {
     const now = this.timeProvider.getNowUTC();
+    const notDeleted = false;
     const predictionTime = new PredictionTime(now, now);
     const scoreValidator = this.getStringValidatorBasedOnType(
       prediction.predictionType,
     );
-    const notDeleted = false;
-
-    this.logger.log(prediction.eventId.toString());
 
     const scorePrediction: Prediction = new ScorePrediction(
       this.DefaultZeroIdentifierValue,
@@ -46,7 +71,17 @@ export class PredictionService implements IPredictionService {
       this.logger,
     );
 
-    // persist
+    const dto = new PredictionDto();
+    dto.id = scorePrediction.id;
+    dto.eventId = scorePrediction.eventId;
+    dto.status = Status[scorePrediction.getStatus()];
+    dto.predictionType = PredictionType[scorePrediction.predictionType];
+    dto.predictionValue = scorePrediction.predictionString;
+    dto.creationDate = now;
+    dto.modificationDate = now;
+    dto.isSoftDeleted = false;
+
+    this.dbContext.insert(dto);
   }
 
   private getStringValidatorBasedOnType(
@@ -63,37 +98,5 @@ export class PredictionService implements IPredictionService {
     throw new BusinessException(
       `No PredictionStringValidator for given type ${PredictionType[type]}`,
     );
-  }
-
-  getPrediction(): Prediction {
-    const scoreValidator: IPredictionStringValidator =
-      new ScorePredictionStringValidator();
-
-    const now = this.timeProvider.getNowUTC();
-
-    const predictionTime = new PredictionTime(now, now);
-
-    const scorePrediction: Prediction = new ScorePrediction(
-      1,
-      2,
-      '3:5',
-      scoreValidator,
-      predictionTime,
-      false,
-      this.logger,
-    );
-
-    scorePrediction.updateStatus(Status.Lost, now);
-    //scorePrediction.updateStatus(Status.Win, now);
-
-    return scorePrediction;
-  }
-
-  getBusinessError(): void {
-    throw new BusinessException('getBusinessErrorExmaple');
-  }
-
-  getOkMessage(): string {
-    return 'OkFromService';
   }
 }

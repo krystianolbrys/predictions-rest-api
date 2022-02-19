@@ -1,12 +1,8 @@
 import { PredictionRequest } from '../../Contracts/Prediction/Request/prediction-request';
-import { Prediction } from '../../Core/Model/prediction.abstract';
+import { PredictionResponse } from '../../Contracts/Prediction/Response/prediction-response';
 
 export interface IPredictionService {
   insert(prediction: PredictionRequest): void;
-
-  getOkMessage(): string;
-
-  getBusinessError(): void;
-
-  getPrediction(): Prediction;
+  fetchAll(): Array<PredictionResponse>;
+  delete(id: number): void;
 }

@@ -84,6 +84,10 @@ export abstract class Prediction {
     this.time.updateModificationTime(updateDate);
   }
 
+  getStatus(): Status {
+    return this.status;
+  }
+
   markAsDeleted() {
     this.isSoftDeleted = true;
   }
