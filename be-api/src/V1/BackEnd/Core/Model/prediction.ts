@@ -66,7 +66,6 @@ export class Prediction {
   }
 
   updateStatus(status: Status, updateDate: Date) {
-    this.logger.log(this.status);
     if (this.isDeleted()) {
       throw new BusinessException(
         `Game marked as deleted, can not perform operation`,
