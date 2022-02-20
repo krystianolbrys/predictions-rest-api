@@ -5,8 +5,8 @@ import { ILogger } from '../Ports/logger.interface';
 import { IPredictionStringValidator } from '../Validators/predictionStringValidator.interface';
 import { PredictionTime } from './prediction-time';
 
-export abstract class Prediction {
-  abstract readonly predictionType: PredictionType;
+export class Prediction {
+  readonly predictionType: PredictionType;
 
   readonly logger: ILogger;
 
@@ -20,6 +20,7 @@ export abstract class Prediction {
   constructor(
     id: number,
     eventId: number,
+    predictionType: PredictionType,
     predictionString: string,
     stringValidator: IPredictionStringValidator,
     time: PredictionTime,
@@ -56,6 +57,7 @@ export abstract class Prediction {
     this.id = id;
     this.status = status;
     this.eventId = eventId;
+    this.predictionType = predictionType;
     this.predictionString = predictionString;
     this.isSoftDeleted = isSoftDeleted;
     this.time = time;

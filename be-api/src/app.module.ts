@@ -4,6 +4,7 @@ import { TimeProvider } from './V1/BackEnd/Infrastructure/TimeProvider/time-prov
 import { DummyPredictionsContext } from './V1/BackEnd/Persistence/DbContext/dummy-predictions.context';
 import DummyConsoleLogger from './V1/BackEnd/Services/Implementations/logger';
 import { PredictionService } from './V1/BackEnd/Services/Implementations/prediction.service';
+import { StringValidatorProvider } from './V1/BackEnd/Services/Providers/string-validator-provider';
 import { PredictionsController } from './V1/Controllers/predictions.controller';
 
 @Module({
@@ -15,6 +16,7 @@ import { PredictionsController } from './V1/Controllers/predictions.controller';
     DummyConsoleLogger,
     Logger,
     DummyPredictionsContext,
+    StringValidatorProvider,
   ],
 })
 export class AppModule {}
