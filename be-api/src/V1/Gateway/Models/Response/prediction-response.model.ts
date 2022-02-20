@@ -1,5 +1,5 @@
-import { PredictionType } from 'src/V1/BackEnd/Shared/Enums/predictionType';
-import { Status } from 'src/V1/BackEnd/Shared/Enums/status';
+import { PredictionType } from '../Shared/predictionType';
+import { Status } from '../Shared/status';
 
 export class PreditcionResponseModel {
   readonly id: number;

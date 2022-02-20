@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { PredictionType } from 'src/V1/BackEnd/Shared/Enums/predictionType';
+import { PredictionType } from '../Shared/predictionType';
 
 export class PredictionRequestModel {
   @ApiProperty()
