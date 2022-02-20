@@ -5,7 +5,7 @@ import { DummyPredictionsContext } from './V1/BackEnd/Persistence/DbContext/dumm
 import DummyConsoleLogger from './V1/BackEnd/Services/Implementations/logger';
 import { PredictionService } from './V1/BackEnd/Services/Implementations/prediction.service';
 import { StringValidatorProvider } from './V1/BackEnd/Services/Providers/string-validator-provider';
-import { PredictionsController } from './V1/Controllers/predictions.controller';
+import { PredictionsController } from './V1/Gateway/Controllers/predictions.controller';
 
 @Module({
   imports: [],

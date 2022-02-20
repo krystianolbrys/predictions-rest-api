@@ -11,10 +11,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import { PredictionRequest } from '../BackEnd/Contracts/Prediction/Request/prediction-request';
-import { PredictionService } from '../BackEnd/Services/Implementations/prediction.service';
-import { IPredictionService } from '../BackEnd/Services/Interfaces/prediction.service.interface';
-import { Status } from '../BackEnd/Shared/Enums/status';
+import { PredictionRequest } from 'src/V1/BackEnd/Contracts/Prediction/Request/prediction-request';
+import { PredictionService } from 'src/V1/BackEnd/Services/Implementations/prediction.service';
+import { IPredictionService } from 'src/V1/BackEnd/Services/Interfaces/prediction.service.interface';
+import { Status } from 'src/V1/BackEnd/Shared/Enums/status';
 import { PredictionRequestModel } from '../Models/Requests/prediction-request.model';
 import { PreditcionResponseModel } from '../Models/Response/prediction-response.model';
 
