@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { PreditcionTypeRequestModel } from './prediction-type-request.model';
+import { PredictionType } from 'src/V1/BackEnd/Shared/Enums/predictionType';
 
 export class PredictionRequestModel {
   @ApiProperty()
@@ -8,8 +8,8 @@ export class PredictionRequestModel {
   readonly event_id: number;
 
   @ApiProperty()
-  @IsEnum(PreditcionTypeRequestModel)
-  readonly market_type: PreditcionTypeRequestModel;
+  @IsEnum(PredictionType)
+  readonly market_type: PredictionType;
 
   @ApiProperty()
   @IsString()

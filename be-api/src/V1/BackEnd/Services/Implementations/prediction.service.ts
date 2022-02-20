@@ -1,6 +1,5 @@
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
-import { Status } from '../../Core/Enums/status';
 import { BusinessException } from '../../Core/Exceptions/business.exception';
 import { ILogger } from '../../Core/Ports/logger.interface';
 import { Prediction } from '../../Core/Model/prediction.abstract';
@@ -13,11 +12,13 @@ import { IPredictionService } from '../Interfaces/prediction.service.interface';
 import DummyConsoleLogger from './logger';
 import { PredictionTime } from '../../Core/Model/prediction-time';
 import { PredictionRequest } from '../../Contracts/Prediction/Request/prediction-request';
-import { PredictionType } from '../../Contracts/Prediction/Common/predictionType';
 import { DummyPredictionsContext } from '../../Persistence/DbContext/dummy-predictions.context';
 import { IDbContext } from '../../Persistence/DbContext/dbContext.interface';
 import { PredictionDto } from '../../Persistence/DataTranferObjects/prediction-dto';
 import { PredictionResponse } from '../../Contracts/Prediction/Response/prediction-response';
+import { ResultPredictionStringValidator } from '../../Core/Validators/resultPredictionStringValidator';
+import { Status } from '../../Shared/Enums/status';
+import { PredictionType } from '../../Shared/Enums/predictionType';
 
 @Injectable()
 export class PredictionService implements IPredictionService {
@@ -30,6 +31,33 @@ export class PredictionService implements IPredictionService {
     @Inject(DummyConsoleLogger) private readonly logger: ILogger,
   ) {
     this.DefaultZeroIdentifierValue = 0;
+  }
+  updateStatus(id: number, status: Status): void {
+    const dto = this.dbContext.fetchOne(id);
+
+    const now = this.timeProvider.getNowUTC();
+    const predictionTime = new PredictionTime(dto.creationDate, now);
+
+    const scoreValidator = this.getStringValidatorBasedOnType(
+      dto.predictionType,
+    );
+
+    const predictionCore = new ScorePrediction(
+      dto.id,
+      dto.eventId,
+      dto.predictionValue,
+      scoreValidator,
+      predictionTime,
+      dto.isSoftDeleted,
+      this.logger,
+      dto.status,
+    );
+
+    predictionCore.updateStatus(status, now);
+
+    dto.status = predictionCore.getStatus();
+
+    this.dbContext.update(id, dto);
   }
 
   delete(id: number): void {
@@ -45,8 +73,8 @@ export class PredictionService implements IPredictionService {
           dto.id,
           dto.eventId,
           dto.predictionValue,
-          PredictionType[dto.predictionType],
-          Status[dto.status],
+          dto.predictionType,
+          dto.status,
         ),
     );
 
@@ -74,8 +102,8 @@ export class PredictionService implements IPredictionService {
     const dto = new PredictionDto();
     dto.id = scorePrediction.id;
     dto.eventId = scorePrediction.eventId;
-    dto.status = Status[scorePrediction.getStatus()];
-    dto.predictionType = PredictionType[scorePrediction.predictionType];
+    dto.status = scorePrediction.getStatus();
+    dto.predictionType = scorePrediction.predictionType;
     dto.predictionValue = scorePrediction.predictionString;
     dto.creationDate = now;
     dto.modificationDate = now;
@@ -91,9 +119,9 @@ export class PredictionService implements IPredictionService {
       return new ScorePredictionStringValidator();
     }
 
-    // if(type === PredictionType.Result){
-    //   return new ResultPredictionStringValidator();
-    // }
+    if (type === PredictionType.Result) {
+      return new ResultPredictionStringValidator();
+    }
 
     throw new BusinessException(
       `No PredictionStringValidator for given type ${PredictionType[type]}`,

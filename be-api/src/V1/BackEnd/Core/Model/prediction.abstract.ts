@@ -1,5 +1,5 @@
-import { PredictionType } from '../Enums/predictionType';
-import { Status } from '../Enums/status';
+import { PredictionType } from '../../Shared/Enums/predictionType';
+import { Status } from '../../Shared/Enums/status';
 import { BusinessException } from '../Exceptions/business.exception';
 import { ILogger } from '../Ports/logger.interface';
 import { IPredictionStringValidator } from '../Validators/predictionStringValidator.interface';
@@ -64,19 +64,17 @@ export abstract class Prediction {
   }
 
   updateStatus(status: Status, updateDate: Date) {
+    this.logger.log(this.status);
     if (this.isDeleted()) {
       throw new BusinessException(
         `Game marked as deleted, can not perform operation`,
       );
     }
 
-    if (this.status != Status.Unresolved) {
-      const message = `Attemp to change final status from ${
-        Status[this.status]
-      } to ${Status[status]}`;
+    if (this.status !== Status.Unresolved) {
+      const message = `Attemp to change final status from ${this.status.toString()} to ${status.toString()}`;
 
       this.logger.log(message);
-
       throw new BusinessException(message);
     }
 
