@@ -41,8 +41,10 @@ export class PredictionsController {
             responseModel.id,
             responseModel.eventId,
             responseModel.predictionString,
-            this.mapper.mapTypeContractToModel(responseModel.predictionType),
-            this.mapper.mapStatusContractToModel(responseModel.status),
+            this.mapper.mapTypeFromContractToModel(
+              responseModel.predictionType,
+            ),
+            this.mapper.mapStatusFromContractToModel(responseModel.status),
           ),
       );
   }
@@ -53,7 +55,7 @@ export class PredictionsController {
     const request = new PredictionRequest(
       dto.event_id,
       dto.prediction,
-      this.mapper.mapTypeModelToContract(dto.market_type),
+      this.mapper.mapTypeFromModelToContract(dto.market_type),
     );
 
     this.predictionService.insert(request);
@@ -65,7 +67,7 @@ export class PredictionsController {
   update(@Query('id') id: number, @Query('status') status: Status) {
     this.predictionService.updateStatus(
       id,
-      this.mapper.mapStatusModelToContract(status),
+      this.mapper.mapStatusFromModelToContract(status),
     );
   }
 
