@@ -5,8 +5,14 @@ export class PredictionTime {
   readonly creationTime: Date;
 
   constructor(creationTime: Date, modificationTime: Date) {
+    if (modificationTime < creationTime) {
+      throw new BusinessException(
+        `ModificationDate can not be lower that CreationDate`,
+      );
+    }
+
     this.creationTime = creationTime;
-    this.updateModificationTime(modificationTime);
+    this.modificationTime = modificationTime;
   }
 
   getUpdatedAt(): Date {

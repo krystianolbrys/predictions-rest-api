@@ -1,0 +1,30 @@
+UnitTesty
+
+1. ScorePredictionStringValidator
+Valid - ['1:1', '0:0', '0:1', '1:0', '12:987']
+InValid - ['-1:1', '1:-1', '11', ':12:987', 'y12:987', '12:987:', '12:987r']
+
+2. ResultPredictionStringValidator
+Valid - ['1', '2', 'X', ]
+InValid - ['11', '22', '3', '0', 'Z', 'x', '1g413']
+
+3. PredictionTime
+- creation - check all combinations with creationDate and modificationDate
+- getUpdatedAt - check return
+- updateModificationTime(furtherDate: Date) 
+	- check all validations that prevent unwanted business behaviors
+	- check update of this.modificationTime
+	
+4. Prediction
+- constructor
+	- check validity of id, eventId, PredictionTime(3), stringValidator(1,2), logger
+	- updateStatus(status: Status, updateDate: Date)
+		- check if status is Unresolved - allow change operation
+		- if not Unresolved block changing status
+		- check if status was updateDate
+		- check mocked PredictionTime if updateModificationTime was executed
+		- check scenario with isSoftDeleted=true entity
+	- getStatus() - check status result
+	- markAsDeleted() - check deleted status
+	- isDeleted() - check deleted status
+	
