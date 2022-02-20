@@ -51,11 +51,11 @@ export class PredictionsController {
 
   @Post()
   @HttpCode(204)
-  create(@Body() dto: PredictionRequestModel): void {
+  create(@Body() model: PredictionRequestModel): void {
     const request = new PredictionRequest(
-      dto.event_id,
-      dto.prediction,
-      this.mapper.mapTypeFromModelToContract(dto.market_type),
+      model.event_id,
+      model.prediction,
+      this.mapper.mapTypeFromModelToContract(model.market_type),
     );
 
     this.predictionService.insert(request);
