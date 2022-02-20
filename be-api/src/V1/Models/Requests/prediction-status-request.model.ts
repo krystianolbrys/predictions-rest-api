@@ -1,15 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
-
-export enum PredictionStatusRequestModel {
-  Win = 'win',
-  Lost = 'lost',
-  Draw = 'draw',
-  Unresolved = 'unresolved',
-}
+import { Status } from 'src/V1/BackEnd/Shared/Enums/status';
 
 export class UpdatePredictionStatusRequestModel {
   @ApiProperty()
-  @IsEnum(PredictionStatusRequestModel)
-  readonly status: PredictionStatusRequestModel;
+  @IsEnum(Status)
+  readonly status: Status;
 }

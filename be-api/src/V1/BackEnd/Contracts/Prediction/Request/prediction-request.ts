@@ -1,4 +1,4 @@
-import { PredictionType } from '../Common/predictionType';
+import { PredictionType } from 'src/V1/BackEnd/Shared/Enums/predictionType';
 
 export class PredictionRequest {
   readonly predictionType: PredictionType;

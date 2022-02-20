@@ -1,5 +1,5 @@
-import { PredictionType } from '../Enums/predictionType';
-import { Status } from '../Enums/status';
+import { PredictionType } from '../../Shared/Enums/predictionType';
+import { Status } from '../../Shared/Enums/status';
 import { ILogger } from '../Ports/logger.interface';
 import { IPredictionStringValidator } from '../Validators/predictionStringValidator.interface';
 import { PredictionTime } from './prediction-time';

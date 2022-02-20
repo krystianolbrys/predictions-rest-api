@@ -1,6 +1,6 @@
-import { Status } from '../../Contracts/Prediction/Common/status';
 import { PredictionRequest } from '../../Contracts/Prediction/Request/prediction-request';
 import { PredictionResponse } from '../../Contracts/Prediction/Response/prediction-response';
+import { Status } from '../../Shared/Enums/status';
 
 export interface IPredictionService {
   insert(prediction: PredictionRequest): void;
