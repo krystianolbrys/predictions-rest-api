@@ -26,7 +26,6 @@ export class DummyPredictionsContext implements IDbContext<PredictionDto> {
       (prediction) => prediction.id == id,
     );
 
-    this.logger.log(filteredElementsWithGivenId.length.toString());
     const isPresent = filteredElementsWithGivenId.length == 1;
 
     if (!isPresent) {
