@@ -73,7 +73,9 @@ export class Prediction {
     }
 
     if (this.status !== Status.Unresolved) {
-      const message = `Attemp to change final status from ${this.status.toString()} to ${status.toString()}`;
+      const message = `Attemp to change final status from ${
+        Status[this.status]
+      } to ${Status[status]}`;
 
       this.logger.log(message);
       throw new BusinessException(message);
