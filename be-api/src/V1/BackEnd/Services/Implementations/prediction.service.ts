@@ -1,4 +1,4 @@
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
 import { Status } from '../../Core/Enums/status';
 import { BusinessException } from '../../Core/Exceptions/business.exception';
@@ -51,10 +51,13 @@ export class PredictionService implements IPredictionService {
       predictionTime,
       dto.isSoftDeleted,
       this.logger,
-      Status[dto.status.toString()],
+      Status[dto.status],
     );
 
-    predictionCore.updateStatus(Status[status.toString()], now);
+    predictionCore.updateStatus(
+      this.mapStatusCOntractToCoreStatus(status),
+      now,
+    );
 
     dto.status = Status[predictionCore.getStatus()].toString();
 
@@ -129,5 +132,23 @@ export class PredictionService implements IPredictionService {
     throw new BusinessException(
       `No PredictionStringValidator for given type ${PredictionType[type]}`,
     );
+  }
+
+  private mapStatusCOntractToCoreStatus(status: StatusContract): Status {
+    if (status == StatusContract.Win) {
+      return Status.Win;
+    }
+
+    if (status == StatusContract.Lost) {
+      return Status.Lost;
+    }
+
+    if (status == StatusContract.Unresolved) {
+      return Status.Unresolved;
+    }
+
+    if (status == StatusContract.Draw) {
+      return Status.Draw;
+    }
   }
 }
