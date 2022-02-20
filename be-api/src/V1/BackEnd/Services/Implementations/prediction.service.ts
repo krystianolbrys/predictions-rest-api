@@ -18,6 +18,8 @@ import { DummyPredictionsContext } from '../../Persistence/DbContext/dummy-predi
 import { IDbContext } from '../../Persistence/DbContext/dbContext.interface';
 import { PredictionDto } from '../../Persistence/DataTranferObjects/prediction-dto';
 import { PredictionResponse } from '../../Contracts/Prediction/Response/prediction-response';
+import { ResultPredictionStringValidator } from '../../Core/Validators/resultPredictionStringValidator';
+import { Status as StatusContract } from '../../Contracts/Prediction/Common/status';
 
 @Injectable()
 export class PredictionService implements IPredictionService {
@@ -31,6 +33,33 @@ export class PredictionService implements IPredictionService {
   ) {
     this.DefaultZeroIdentifierValue = 0;
   }
+  updateStatus(id: number, status: StatusContract): void {
+    const dto = this.dbContext.fetchOne(id);
+
+    const now = this.timeProvider.getNowUTC();
+    const predictionTime = new PredictionTime(dto.creationDate, now);
+
+    const scoreValidator = this.getStringValidatorBasedOnType(
+      PredictionType[dto.predictionType.toString()],
+    );
+
+    const predictionCore = new ScorePrediction(
+      dto.id,
+      dto.eventId,
+      dto.predictionValue,
+      scoreValidator,
+      predictionTime,
+      dto.isSoftDeleted,
+      this.logger,
+      Status[dto.status.toString()],
+    );
+
+    predictionCore.updateStatus(Status[status.toString()], now);
+
+    dto.status = Status[predictionCore.getStatus()].toString();
+
+    this.dbContext.update(id, dto);
+  }
 
   delete(id: number): void {
     this.dbContext.delete(id);
@@ -38,6 +67,8 @@ export class PredictionService implements IPredictionService {
 
   fetchAll(): PredictionResponse[] {
     const all = this.dbContext.fetchAll();
+
+    this.logger.log(all[0].status);
 
     const result = all.map(
       (dto) =>
@@ -91,9 +122,9 @@ export class PredictionService implements IPredictionService {
       return new ScorePredictionStringValidator();
     }
 
-    // if(type === PredictionType.Result){
-    //   return new ResultPredictionStringValidator();
-    // }
+    if (type === PredictionType.Result) {
+      return new ResultPredictionStringValidator();
+    }
 
     throw new BusinessException(
       `No PredictionStringValidator for given type ${PredictionType[type]}`,
