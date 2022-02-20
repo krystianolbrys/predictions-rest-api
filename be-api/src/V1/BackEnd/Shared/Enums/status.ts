@@ -1,6 +1,6 @@
 export enum Status {
-  Win = 'win',
-  Lost = 'lost',
-  Draw = 'draw',
-  Unresolved = 'unresolved',
+  Win = 'Win',
+  Lost = 'Lost',
+  Draw = 'Draw',
+  Unresolved = 'Unresolved',
 }

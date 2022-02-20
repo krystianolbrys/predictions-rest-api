@@ -1,4 +1,4 @@
 export enum PredictionType {
-  Result = '1x2',
-  Score = 'score',
+  Result = 'Result',
+  Score = 'Score',
 }
