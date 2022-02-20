@@ -7,7 +7,7 @@ export class PredictionTime {
   constructor(creationTime: Date, modificationTime: Date) {
     if (modificationTime < creationTime) {
       throw new BusinessException(
-        `ModificationDate can not be lower that CreationDate`,
+        `ModificationDate can not be lower than CreationDate`,
       );
     }
 
@@ -28,7 +28,7 @@ export class PredictionTime {
 
     if (furtherDate < this.creationTime) {
       throw new BusinessException(
-        `ModificationDate can not be lower that CreationDate`,
+        `ModificationDate can not be lower than CreationDate`,
       );
     }
 

@@ -29,11 +29,11 @@ export class Prediction {
     logger: ILogger,
   ) {
     if (id < 0) {
-      throw new BusinessException('Id can not be lower or equal 0');
+      throw new BusinessException('Id can not be lower than 0');
     }
 
     if (eventId < 0) {
-      throw new BusinessException('EventId can not be lower or equal 0');
+      throw new BusinessException('EventId can not be lower than 0');
     }
 
     if (logger == null || undefined) {
