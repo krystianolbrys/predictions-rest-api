@@ -3,8 +3,19 @@ import { IPredictionStringValidator } from './predictionStringValidator.interfac
 export class ScorePredictionStringValidator
   implements IPredictionStringValidator
 {
+  private readonly matchRegex: string;
+
+  constructor() {
+    this.matchRegex = '^[0-9]+[:][0-9]+$';
+  }
+
   validate(value: string): boolean {
-    // add implementation for "1:3" like values
-    return true;
+    const matches = value.match(this.matchRegex);
+
+    if (matches == null || undefined) {
+      return false;
+    }
+
+    return matches.length == 1;
   }
 }
