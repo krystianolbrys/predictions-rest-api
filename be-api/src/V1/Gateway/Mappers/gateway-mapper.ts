@@ -5,7 +5,7 @@ import { Status as StatusContract } from 'src/V1/BackEnd/Shared/Enums/status';
 import { Status as StatusModel } from '../Models/Shared/status';
 
 export class GatewayMapper {
-  mapStatusModelToContract(statusModel: StatusModel): StatusContract {
+  mapStatusFromModelToContract(statusModel: StatusModel): StatusContract {
     switch (statusModel) {
       case StatusModel.Win:
         return StatusContract.Win;
@@ -20,7 +20,20 @@ export class GatewayMapper {
     }
   }
 
-  mapStatusContractToModel(statusContract: StatusContract): StatusModel {
+  mapTypeFromModelToContract(
+    modelContract: PredictionTypeModel,
+  ): PredictionTypeContract {
+    switch (modelContract) {
+      case PredictionTypeModel.Score:
+        return PredictionTypeContract.Score;
+      case PredictionTypeModel.Result:
+        return PredictionTypeContract.Result;
+      default:
+        throw new BusinessException('Mapping error - not detailed - not good');
+    }
+  }
+
+  mapStatusFromContractToModel(statusContract: StatusContract): StatusModel {
     switch (statusContract) {
       case StatusContract.Win:
         return StatusModel.Win;
@@ -35,20 +48,7 @@ export class GatewayMapper {
     }
   }
 
-  mapTypeModelToContract(
-    modelContract: PredictionTypeModel,
-  ): PredictionTypeContract {
-    switch (modelContract) {
-      case PredictionTypeModel.Score:
-        return PredictionTypeContract.Score;
-      case PredictionTypeModel.Result:
-        return PredictionTypeContract.Result;
-      default:
-        throw new BusinessException('Mapping error - not detailed - not good');
-    }
-  }
-
-  mapTypeContractToModel(
+  mapTypeFromContractToModel(
     typeContract: PredictionTypeContract,
   ): PredictionTypeModel {
     switch (typeContract) {
